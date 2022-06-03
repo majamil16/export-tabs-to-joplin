@@ -7,6 +7,7 @@ Chrome Extension, TypeScript and Visual Studio Code
 ## Prerequisites
 
 * [node + npm](https://nodejs.org/) (Current Version)
+* nvm - node 18.0
 
 ## Option
 
