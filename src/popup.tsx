@@ -17,7 +17,6 @@ interface Tab {
   windowId: number;
 }
 
-
 const Popup = () => {
   const [count, setCount] = useState(0);
   const [currentURL, setCurrentURL] = useState<string>();
@@ -25,7 +24,7 @@ const Popup = () => {
   const [approved, _setApproved] = useState<boolean>(false);
   const [joplinKey, _setJoplinKey] = useState<string | null>(); // store the user's joplin API key
 
-  const [exportErrors, setExportErrors] = useState<string>()
+  const [exportErrors, setExportErrors] = useState<string>();
 
   useEffect(() => {
     chrome.action.setBadgeText({ text: count.toString() }); // 'badge' on the chrome extension
@@ -80,7 +79,6 @@ const Popup = () => {
       console.log("Joplin Key is : ");
       console.log(api_key);
       // TODO - store the key in LS.
-      
     } catch (e) {
       console.log(e);
     }
@@ -89,69 +87,78 @@ const Popup = () => {
   /**
    * Create a new Joplin page to put the URLs on
    */
-  const createJoplinPage = async (): Promise<void> => {
+  const createJoplinPage = async (bodyHtml: string): Promise<void> => {
     try {
       console.log("Create Joplin Page");
 
       // generate a uuid without dashes to assign the page.
-      const pageId: string = uuid().replace(/-/g, '');
       console.log(pageId);
+      const pageId: string = uuid().replace(/-/g, "");
 
       const _body = {
-        // body_html: "<p>Test note body</p><ul><li>item 1</li><li>item 2</li></ul>",
+        body_html: bodyHtml, // "<p>Test note body</p><ul><li>item 1</li><li>item 2</li></ul>",
         title: "Exported Chrome Tabs",
         id: pageId,
       };
 
       // post to the /notes endpoint
       let response = await fetch(
-        BASE_URL + 
-        '/notes' + "?" +
-        new URLSearchParams({
-          token: joplinKey as string,
-        }),
+        BASE_URL +
+          "/notes" +
+          "?" +
+          new URLSearchParams({
+            token: joplinKey as string,
+          }),
 
-        {method: 'POST', body: JSON.stringify(_body) }
-      )
-      response = await response.json()
-      console.log('Response?')
-      console.log(response)
-    } catch(e) {
-      console.log("Error")
-      console.log(e)
+        { method: "POST", body: JSON.stringify(_body) }
+      );
+      response = await response.json();
+      console.log("Response?");
+      console.log(response);
+    } catch (e) {
+      console.log("Error");
+      console.log(e);
     }
   };
-
 
   /**
    * onClick for "Export" button
    */
   const exportToJoplin = (): void => {
     console.log("Clicked export");
-    console.log(joplinKey)
+    console.log(joplinKey);
     if (joplinKey == null) {
-      let msg: string = 'Joplin key is null. Please reauthenticate'
-      setExportErrors(msg)
+      let msg: string = "Joplin key is null. Please reauthenticate";
+      setExportErrors(msg);
     } else {
-      setExportErrors(undefined)
-      createJoplinPage()
+      setExportErrors(undefined);
+
       // get the tabs
       chrome.tabs.query({}, (tabs) => {
         console.log("=== got tabs ===");
         console.log(tabs);
 
-        formatTabs((tabs as Array<Tab>))
+        const formattedHTML = formatTabsAsHTML(tabs as Array<Tab>);
+        console.log("formatted formattedHTML");
+        console.log(formattedHTML);
+        createJoplinPage(formattedHTML);
       });
     }
   };
 
-  const formatTabs = (tabsList: Array<Tab>) => {
+  const formatTabsAsHTML = (tabsList: Array<Tab>) => {
+    const formattedList = tabsList.map((t) => {
+      const { title, url } = t;
+      console.log(title);
+      console.log(url);
+      let markdownString: string = `<li><a href="${url}">${title}</a></li>`;
+      return markdownString;
+    });
 
-    tabsList.map(t => {
-      console.log(t?.title)
-      console.log(t?.url)
-    })
-  }
+    let formattedListStr = formattedList.join("");
+    formattedListStr = "<ul>" + formattedListStr + "</ul>";
+    return formattedListStr;
+  };
 
   return (
     <>
@@ -164,7 +171,7 @@ const Popup = () => {
       <input
         onChange={(e) => {
           console.log("changed joplin-key");
-          console.log(e);
+          console.log(e.target.value);
         }}
         type="password"
         name="joplin-key"
