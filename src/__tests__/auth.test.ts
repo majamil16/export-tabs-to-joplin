@@ -1,5 +1,4 @@
-import { getAuthToken, awaitUserInput, AuthToken } from "../auth";
-import { JOPLIN_API_KEY } from "../constants";
+import { getAuthToken, awaitUserInput } from "../auth";
 
 afterEach(() => {
   jest.clearAllMocks();
@@ -19,7 +18,7 @@ describe("Test for getAuthToken()", () => {
     const token = await getAuthToken();
 
     expect(fetch).toHaveBeenCalledWith(
-      `http://localhost:41184/auth?token=${JOPLIN_API_KEY}`,
+      `http://localhost:41184/auth`,
       { method: "POST" }
     );
     expect(token).toBeTruthy();

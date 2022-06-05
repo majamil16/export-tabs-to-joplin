@@ -1,7 +1,7 @@
 /**
  * Handle Joplin Auth
  */
-import { JOPLIN_API_KEY, BASE_URL } from "./constants";
+import { BASE_URL } from "./constants";
 
 export interface AuthToken {
   auth_token: string;
@@ -22,11 +22,12 @@ const getAuthToken = async (): Promise<AuthToken | null> => {
     console.log("in getAuthToken");
     // make a request to auth endpoint
     let token = await fetch(
-      authURL +
-        "?" +
-        new URLSearchParams({
-          token: JOPLIN_API_KEY,
-        }),
+      authURL // +
+        // "?" +
+        // new URLSearchParams({
+        //   token: JOPLIN_API_KEY,
+        // })
+        ,
       { method: "POST" }
     );
     let token_json = (await token.json()) as AuthToken;
