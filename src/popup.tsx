@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
-// import { JOPLIN_API_KEY, BASE_URL } from "./constants";
 import { getAuthToken, awaitUserInput, AuthToken } from "./auth";
 import { v4 as uuid } from "uuid";
 import { BASE_URL } from "./constants";
@@ -92,12 +91,11 @@ const Popup = () => {
       console.log("Create Joplin Page");
 
       // generate a uuid without dashes to assign the page.
-      console.log(pageId);
       const pageId: string = uuid().replace(/-/g, "");
 
       const _body = {
         body_html: bodyHtml, // "<p>Test note body</p><ul><li>item 1</li><li>item 2</li></ul>",
-        title: "Exported Chrome Tabs",
+        title: "Exported Chrome Tabs " + Date(),
         id: pageId,
       };
 
