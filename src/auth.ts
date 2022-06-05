@@ -29,7 +29,7 @@ const getAuthToken = async (): Promise<AuthToken | null> => {
         }),
       { method: "POST" }
     );
-    let token_json: AuthToken = await token.json();
+    let token_json = (await token.json()) as AuthToken;
     return token_json;
   } catch (e) {
     console.log("Error!!");
@@ -64,6 +64,7 @@ const awaitUserInput = async (token: string) => {
         response = await response.json();
         let status = (response as AuthAPIResponse).status;
         console.log(`STATUS == ${status}`);
+        console.log('FETcHED')
         // if waiting...request again
         if (status === "waiting") {
           console.log(`Still waiting ${i}`);
@@ -74,11 +75,14 @@ const awaitUserInput = async (token: string) => {
           approved = true;
           resolve(token);
         } else {
-          reject(null);
+          console.log('rejecting with status')
+          reject('user rejected');
         }
       }
     } catch (e) {
+      console.log('error = ')
       console.log(e);
+      reject(e)
     }
   });
 };
