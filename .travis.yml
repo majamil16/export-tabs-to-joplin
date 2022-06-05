@@ -1,5 +1,9 @@
 language: node_js
+node_js:
+  - 18.0
 cache: npm
+before_install:
+  - npm i -g npm@8.12.1
 script:
     - npm run build
     - npm run test
