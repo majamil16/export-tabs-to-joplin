@@ -70,3 +70,6 @@ Load `dist` directory
 ## Test
 
 `npx jest` or `npm run test`
+
+* helpful: [Travis CI Build Config Explorer
+](https://config.travis-ci.com/explore)
