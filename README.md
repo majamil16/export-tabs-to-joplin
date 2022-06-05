@@ -1,6 +1,6 @@
 # Chrome Extension TypeScript Starter
 
-![build](https://github.com/chibat/chrome-extension-typescript-starter/workflows/build/badge.svg)
+[![Build Status](https://app.travis-ci.com/majamil16/export-tabs-to-joplin.svg?branch=master)](https://app.travis-ci.com/majamil16/export-tabs-to-joplin)
 
 Chrome Extension, TypeScript and Visual Studio Code
 
