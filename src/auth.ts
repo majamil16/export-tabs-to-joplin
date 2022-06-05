@@ -64,7 +64,6 @@ const awaitUserInput = async (token: string) => {
         response = await response.json();
         let status = (response as AuthAPIResponse).status;
         console.log(`STATUS == ${status}`);
-        console.log('FETcHED')
         // if waiting...request again
         if (status === "waiting") {
           console.log(`Still waiting ${i}`);
